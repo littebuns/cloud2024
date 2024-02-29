@@ -1,4 +1,4 @@
-package org.example.common;
+package org.example.pay.config;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -10,7 +10,7 @@ import java.util.Collections;
 
 public class CodeGenerator {
 
-    private static String url = "jdbc:mysql://?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai";
+    private static String url = "jdbc:mysql:///cloud?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai";
     private static String userName = "root";
     private static String password = "";
 
@@ -19,10 +19,8 @@ public class CodeGenerator {
         FastAutoGenerator.create(url, userName, password)
                 .globalConfig(builder -> {
                     builder.author("xxb") // 设置作者
-                            .enableSwagger() // 开启 swagger 模式
-                            .fileOverride() // 覆盖已生成文件
-
-                            .outputDir("D:\\project\\cimc\\datacenter\\mmt-collector\\data-collect\\src\\main\\java"); // 指定输出目录
+                            .enableSpringdoc() // 开启 swagger 模式
+                            .outputDir("D:\\project\\personal\\cloud2024\\pay\\src\\main\\java"); // 指定输出目录
                 })
                 .dataSourceConfig(builder -> builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
                     int typeCode = metaInfo.getJdbcType().TYPE_CODE;
@@ -36,15 +34,16 @@ public class CodeGenerator {
                     return typeRegistry.getColumnType(metaInfo);
                 }))
                 .packageConfig(builder -> {
-                    builder.parent("com.mmt.collector") // 设置父包名
+                    builder.parent("org.example.pay") // 设置父包名
                             .entity("model.entity")
-//                            .moduleName("data-collect") // 设置父包模块名
-                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\project\\cimc\\datacenter\\mmt-collector\\data-collect\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
+//                            .moduleName("pay") // 设置父包模块名
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\project\\personal\\cloud2024\\pay\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("finance_audit_record") // 设置需要生成的表名.
+                    builder.addInclude("t_pay") // 设置需要生成的表名.
                             .addTablePrefix() // 设置过滤表前缀
-                            .mapperBuilder().enableBaseColumnList().enableBaseResultMap().build();
+                            .mapperBuilder().enableBaseColumnList().enableBaseResultMap().build()
+                            .entityBuilder().enableFileOverride().build();
 
                 })
                 .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
